@@ -5,7 +5,7 @@ html {
 }
 
 body {
-  background-image: url("img/WhiteTile.png");
+  background-image: url("../assets/images/backgrounds/WhiteTile.png");
   background-repeat: repeat;
 }
 

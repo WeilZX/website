@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html style="height:100%; margin:0; padding:0">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Clock</title>
+    <style type="text/css">
+        html {
+            background: #000000;
+            font-family: Mario64;
+            color: #FFD700; /* Gold color - matches retro gaming aesthetic */
+        }
+        
+        body {
+            background-image: url('../assets/images/backgrounds/stars_dot.gif');
+            background-color: rgba(0, 0, 0, 0.5); /* Lower background opacity */
+        }
+        
+        @font-face { 
+            font-family: "Mario64"; 
+            src: url('../assets/fonts/Mario64.ttf'); 
+        } 
+
+        #clocktext {
+            text-shadow: 
+                0 0 15px rgba(255, 215, 0, 0.6),  /* Gold glow */
+                2px 2px 4px rgba(0, 0, 0, 0.5);   /* Subtle shadow */
+            position: relative;
+            z-index: 2;  /* Ensure clock stays above background */
+        }
+
+        /* Add an overlay to make background more subtle */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.3); /* Darkens the background */
+            z-index: 1;
+        }
+    </style>
+</head>
+
+<body style="display:flex; height:100%; margin:0; padding:0; justify-content:center; align-items:center">
+    <span id="clocktext" style="font-kerning: none; font-size: 187.8pt;">21:11:21</span>
+    
+    <script>
+        "use strict";
+        
+        let textElem = document.getElementById("clocktext");
+        const targetWidth = 0.3;  // Made clock larger
+        let curFontSize = 20;
+        
+        function updateClock() {
+            const d = new Date();
+            let s = "";
+            s += (10 > d.getHours  () ? "0" : "") + d.getHours  () + ":";
+            s += (10 > d.getMinutes() ? "0" : "") + d.getMinutes() + ":";
+            s += (10 > d.getSeconds() ? "0" : "") + d.getSeconds();
+            textElem.textContent = s;
+            setTimeout(updateClock, 1000 - d.getTime() % 1000 + 20);
+        }
+        
+        function updateTextSize() {
+            for (let i = 0; 3 > i; i++) {
+                curFontSize *= targetWidth / (textElem.offsetWidth / textElem.parentNode.offsetWidth);
+                textElem.style.fontSize = curFontSize + "pt";
+            }
+        }
+        
+        updateClock();
+        updateTextSize();
+        window.addEventListener("resize", updateTextSize);
+    </script>
+</body>
+</html>
