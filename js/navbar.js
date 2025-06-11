@@ -4,10 +4,8 @@ document.addEventListener('DOMContentLoaded', function() {
         <nav class="navbar">
             <ul>
                 <li><a href="index.html">Home</a></li>
-                <li><a href="soon.html">Interests...</a></li>
-                <li><a href="clocks/clock-v1.html">Web Clock (Nayuki)</a></li>
-                <li><a href="clocks/clock-v2.html">Web Clock (Claude)</a></li>
-                <li><a href="clocks/clock-v3.html">Web Clock v3</a></li>
+                <li><a href="soon.html">Interests</a></li>
+                <li><a href="Clocktower.html">Clocks</a></li>
             </ul>
         </nav>
     `;
