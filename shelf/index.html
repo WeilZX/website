@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src data:; base-uri 'none'; form-action 'none'">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<title>Prompt Shelf</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main id="lock" class="lock">
+  <h1>Prompt Shelf</h1>
+  <label for="pass">Passphrase</label>
+  <div class="lock-row">
+    <input id="pass" type="password" autocomplete="off" autocapitalize="off" spellcheck="false">
+    <button id="unlock" type="button" class="primary">Unlock</button>
+  </div>
+  <p id="lock-msg" class="msg" role="status" aria-live="polite"></p>
+  <p id="offline" class="hint">If this site is blocked somewhere, use the <a href="shelf.html" download="prompt-shelf.html">offline copy</a>: one file that opens from disk and asks for the same passphrase.</p>
+</main>
+
+<div id="app" hidden>
+  <header class="bar">
+    <input id="q" type="search" placeholder="Search  (press / )" autocomplete="off" spellcheck="false" aria-label="Search prompts">
+    <select id="target" aria-label="Filter by target"><option value="">All targets</option></select>
+    <span id="count" class="muted"></span>
+    <button id="lockbtn" type="button">Lock</button>
+  </header>
+  <div id="tags" class="chips" aria-label="Filter by tag"></div>
+  <p id="status" class="msg" role="status" aria-live="polite"></p>
+  <div id="list"></div>
+  <p id="empty" class="muted" hidden>No prompts match.</p>
+  <footer class="muted">
+    <p>Keys: / search. Enter in search copies the top result, or opens its fields. Arrow keys move between cards. On a card: Enter copies, Space expands, f fills fields, d downloads. In a field: Ctrl+Enter copies, Esc leaves. Esc returns to search.</p>
+    <p id="built"></p>
+  </footer>
+</div>
+
+<div id="manual" class="manual" hidden>
+  <div class="manual-box">
+    <p>The browser blocked automatic copying. The text is selected: press Ctrl+C, then close.</p>
+    <textarea id="manual-text" readonly spellcheck="false"></textarea>
+    <button id="manual-close" type="button">Close</button>
+  </div>
+</div>
+
+<script type="application/json" id="shelf-data"></script>
+<script src="app.js"></script>
+</body>
+</html>

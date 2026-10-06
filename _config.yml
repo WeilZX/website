@@ -1,0 +1,5 @@
+# Added for prompt-shelf. The only setting: keep the build tooling in
+# shelf-src/ off the published site. Everything else stays on GitHub Pages
+# defaults, exactly as before this file existed.
+exclude:
+  - shelf-src

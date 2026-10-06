@@ -1,1 +1,5 @@
 .DS_Store
+
+# prompt-shelf: plaintext prompts and local build output must never be committed
+shelf-src/content/
+shelf-src/dist/
