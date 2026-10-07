@@ -29,6 +29,11 @@ If the check fails, it prints `CHECK FAILED` and exits with code 1. Do not commi
 
 ## Prompt file format
 
+Any `.md` file works as is: paste markdown, save, build. The file name becomes the title
+(`Roaming Strings.md` shows as "Roaming Strings"), with no tags and target `general`.
+
+Optionally, start the file with a header to set a title, tags (filter chips) and a target:
+
 ```markdown
 ---
 title: Example title

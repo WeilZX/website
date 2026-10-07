@@ -24,11 +24,14 @@ function unquote(s) {
   return s;
 }
 
-// Minimal YAML front matter: `key: value`, `key: [a, b]`, and `key:` followed by `- item` lines.
+// Front matter is optional. Supported: `key: value`, `key: [a, b]`, and `key:` followed by
+// `- item` lines. A file without it, or whose opening --- block is not key: value lines (for
+// example a horizontal rule), is read as plain markdown with empty meta.
 export function parseFrontmatter(text) {
   text = text.replace(/^﻿/, '').replace(/\r\n?/g, '\n');
+  const plain = { meta: {}, body: text.replace(/^\s*\n/, '').replace(/\s+$/, '') };
   const m = /^---\n([\s\S]*?)\n---[ \t]*(?:\n|$)/.exec(text);
-  if (!m) return { error: 'missing front matter (the file must start with a --- line)' };
+  if (!m) return plain;
   const meta = {};
   let listKey = null;
   for (const line of m[1].split('\n')) {
@@ -36,7 +39,7 @@ export function parseFrontmatter(text) {
     const item = /^\s*-\s+(.*)$/.exec(line);
     if (item && listKey) { meta[listKey].push(unquote(item[1])); continue; }
     const kv = /^([A-Za-z_][\w-]*)\s*:\s*(.*)$/.exec(line);
-    if (!kv) return { error: `cannot read front matter line: ${line.trim()}` };
+    if (!kv) return plain;
     const [, key, raw] = kv;
     listKey = null;
     if (raw.trim() === '') { meta[key] = []; listKey = key; }
@@ -67,15 +70,13 @@ export function loadContent() {
   const ids = new Map();
   for (const file of walk(CONTENT)) {
     const rel = path.relative(CONTENT, file).split(path.sep).join('/');
-    const parsed = parseFrontmatter(readFileSync(file, 'utf8'));
-    if (parsed.error) { errors.push(`${rel}: ${parsed.error}`); continue; }
-    const { meta, body } = parsed;
+    const { meta, body } = parseFrontmatter(readFileSync(file, 'utf8'));
     for (const k of Object.keys(meta)) if (!KNOWN_KEYS.includes(k)) warnings.push(`${rel}: unknown front matter key "${k}" ignored`);
 
     let title = typeof meta.title === 'string' ? meta.title.trim() : '';
-    if (!title) { title = path.basename(file, '.md'); warnings.push(`${rel}: no title, using the file name`); }
+    if (!title) title = path.basename(file).replace(/\.md$/i, '');
     let target = typeof meta.target === 'string' ? meta.target.trim().toLowerCase() : '';
-    if (!target) { target = 'general'; warnings.push(`${rel}: no target, using "general"`); }
+    if (!target) target = 'general';
     else if (!TARGETS.includes(target)) { errors.push(`${rel}: target "${target}" is not one of ${TARGETS.join(', ')}`); continue; }
     const rawTags = Array.isArray(meta.tags) ? meta.tags : typeof meta.tags === 'string' ? [meta.tags] : [];
     const tags = [...new Set(rawTags.map((t) => String(t).trim().toLowerCase()).filter(Boolean))];

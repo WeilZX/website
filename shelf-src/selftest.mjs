@@ -59,12 +59,14 @@ await test('search: AND terms, title ranks above body, target and tag filters', 
   assert.deepEqual(s('', '', ['code', 'python']), []);
   assert.deepEqual(s('nothing-matches'), []);
 });
-await test('front matter: inline list, block list, quotes, CRLF, missing', () => {
+await test('front matter: inline list, block list, quotes, CRLF, optional', () => {
   const a = parseFrontmatter('---\r\ntitle: "Hi: there"\r\ntags: [a, \'b\']\r\ntarget: api\r\n---\r\n\r\nBody\r\n');
   assert.deepEqual(a, { meta: { title: 'Hi: there', tags: ['a', 'b'], target: 'api' }, body: 'Body' });
   const b = parseFrontmatter('---\ntitle: T\ntags:\n  - x\n  - y\n---\nB');
   assert.deepEqual(b.meta.tags, ['x', 'y']);
-  assert.ok(parseFrontmatter('no header').error);
+  assert.deepEqual(parseFrontmatter('\n# Just markdown\nText\n'), { meta: {}, body: '# Just markdown\nText' });
+  const rule = '---\nA horizontal rule, not front matter\n---\nMore';
+  assert.deepEqual(parseFrontmatter(rule), { meta: {}, body: rule });
 });
 
 // ---------- crypto ----------
